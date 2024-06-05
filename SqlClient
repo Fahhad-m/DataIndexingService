@@ -1,0 +1,28 @@
+  Determining projects to restore...
+  Writing C:\Users\fahad.mazharjamil\AppData\Local\Temp\tmp57B1.tmp
+info : X.509 certificate chain validation will use the default trust store selected by .NET.
+info : X.509 certificate chain validation will use the default trust store selected by .NET.
+info : Adding PackageReference for package 'Microsoft.Data' into project 'C:\SimpliasProjects\DataIndexingService\DataIndexingService.csproj'.
+info :   GET https://api.nuget.org/v3/registration5-gz-semver2/microsoft.data/index.json
+info :   NotFound https://api.nuget.org/v3/registration5-gz-semver2/microsoft.data/index.json 449ms
+info :   GET https://api.nuget.org/v3/registration5-gz-semver2/microsoft.data/index.json
+info :   NotFound https://api.nuget.org/v3/registration5-gz-semver2/microsoft.data/index.json 235ms
+error: There are no versions available for the package 'Microsoft.Data'.
+
+
+Usage: NuGet.CommandLine.XPlat.dll package add [options]
+
+Options:
+  -h|--help               Show help information
+  --force-english-output  Forces the application to run using an invariant, English-based culture.
+  --package               Id of the package to be added.
+  --version               Version of the package to be added.
+  -d|--dg-file            Path to the dependency graph file to be used to restore preview and compatibility check.
+  -p|--project            Path to the project file.
+  -f|--framework          Frameworks for which the package reference should be added.
+  -n|--no-restore         Do not perform restore preview and compatibility check. The added package reference will be unconditional.
+  -s|--source             Specifies NuGet package sources to use during the restore.
+  --package-directory     Directory to restore packages in.
+  --interactive           Allow the command to block and require manual action for operations like authentication.
+  --prerelease            Allows prerelease packages to be installed.
+
