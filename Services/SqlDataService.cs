@@ -37,7 +37,7 @@ namespace DataIndexingService.Services
                 {
                     await connection.OpenAsync();
 
-                    var query = "SELECT Id, Name, Description, Price FROM Products";
+                    var query = "SELECT Id, Name, Description, Price, Category FROM Products";
                     using (var command = new SqlCommand(query, connection))
                     using (var reader = await command.ExecuteReaderAsync())
                     {
@@ -48,7 +48,8 @@ namespace DataIndexingService.Services
                                 Id = reader.GetInt32(0),
                                 Name = reader.GetString(1),
                                 Description = reader.GetString(2),
-                                Price = reader.GetDecimal(3)
+                                Price = reader.GetDecimal(3),
+                                Category = reader.GetString(4)
                             });
                         }
                     }
