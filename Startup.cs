@@ -10,6 +10,8 @@ using static DataIndexingService.Interfaces.IDataIndexer;
 using DataIndexingService.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+using System.Collections.Specialized;
 
 public class Startup
 {
@@ -19,31 +21,54 @@ public class Startup
     {
         _configuration = configuration;
     }
+    //public void ConnectToElasticsearch(_configuration)
+    //{
+    //    var url = _configuration.Url;
+    //    var apiKey = _elasticsearchSettings.ApiKey;
+    //    var username = _elasticsearchSettings.Username;
+    //    var password = _elasticsearchSettings.Value;
+
+    //    // Use these settings to connect to Elasticsearch
+    //}
     public void ConfigureServices(IServiceCollection services)
     {
         var connectionString = _configuration.GetConnectionString("DefaultConnection");
+      
+        var node = new Uri(_configuration["Elasticsearch:Uri"]);
+        var settings = new ConnectionSettings(node)
+          .DefaultIndex("products")
+          .ThrowExceptions(alwaysThrow: true) // I like exceptions
+          .PrettyJson() // Good for DEBUG
+          .RequestTimeout(TimeSpan.FromSeconds(300))
+          .ApiKeyAuthentication("Authorization", "ApiKey MFdmci1JOEJLUHRQSmRaYXNVVms6anh0MUw0MENUd2UtNW9zbFJYNFZPQQ==")
+          .GlobalHeaders(new NameValueCollection 
+    { 
+        { "Authorization", "ApiKey MFdmci1JOEJLUHRQSmRaYXNVVms6anh0MUw0MENUd2UtNW9zbFJYNFZPQQ==" } 
+    });;
+          // .BasicAuthentication("enterprise_search", "Netsolpk111!");
+          //.ApiKeyAuthentication("Authorization", "ApiKey MFdmci1JOEJLUHRQSmRaYXNVVms6anh0MUw0MENUd2UtNW9zbFJYNFZPQQ==");
 
-        var elasticsearchUri = new Uri(_configuration["Elasticsearch:Uri"]);
-        var settings = new ConnectionSettings(elasticsearchUri).DefaultIndex("products");
+
+        var client = new ElasticClient(settings);
+
+       
+        var existsResponse = client.Indices.Exists("products");
+        
+        if (existsResponse != null)
+        {
+
+            services.AddSingleton(existsResponse);
+
+        }
+        else
+        {
+            client.Indices.Create("products");
+
+        }
+
+        client = new ElasticClient(settings);
 
 
-        var client = new ElasticClient(
-               new ConnectionSettings(new Uri(_configuration.GetValue<string>("Elasticsearch:Uri")))
-                   .DefaultIndex("products")
-                 //  .BasicAuthentication(_configuration.GetValue<string>("ElasticCloud:BasicAuthUser"),
-                  //     _configuration.GetValue<string>("ElasticCloud:BasicAuthPassword"))
-                       );
-
-
-         client = new ElasticClient(settings);
-
-
-        //var elasticsearchSettings = _configuration.GetSection("Elasticsearch");
-        //var uri = new Uri(elasticsearchSettings["Uri"]);
-        //var defaultIndex = elasticsearchSettings["Index"];
-
-        //var settings = new ConnectionSettings(uri).DefaultIndex(defaultIndex);
-        //var client = new ElasticClient(settings);
 
         services.AddSingleton(client);
 

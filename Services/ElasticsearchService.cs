@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using DataIndexingService.Interfaces;
 using static DataIndexingService.Interfaces.IDataIndexer;
+using Microsoft.Extensions.Options;
 
 namespace DataIndexingService.Services
 {
@@ -20,17 +21,19 @@ namespace DataIndexingService.Services
         // private readonly IElasticClient _elasticClient;
         private readonly ILogger<ElasticsearchService> _logger;
         private readonly ElasticClient _client;
+        
         public ElasticsearchService(ElasticClient elasticClient, ILogger<ElasticsearchService> logger)
         {
            _client = elasticClient;
             _logger = logger;
+          
         }
 
         //public Task IndexDataAsync(List<Products> data)
         //{
         //    throw new NotImplementedException();
         //}
-
+       
         public async Task IndexDataAsync(List<Products> products)
         {
             try
